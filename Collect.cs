@@ -3,6 +3,7 @@ using UnityEngine;
 public class Collect : MonoBehaviour
 {
     public DisplayStats displayStats;
+    public int hitCount = 0;
 
     void Update()
     {
@@ -13,10 +14,25 @@ public class Collect : MonoBehaviour
             
             if(Physics.Raycast(ray, out hit))
             {
-                if(hit.collider.CompareTag("Coin"))
+                switch(hit.collider.tag)
                 {
-                    displayStats.UpdateCoins();
-                    Destroy(hit.collider.gameObject);
+                    case "Coin":
+                        displayStats.UpdateCoins();
+                        hitCount += 1;
+                        if (hitCount > 0)
+                        {
+                            Destroy(hit.collider.gameObject);
+                            hitCount = 0;
+                        }
+                        break;
+                    case "Wood":
+                        hitCount += 1;
+                        if (hitCount >= 5)
+                        {
+                            Destroy(hit.collider.gameObject);
+                            hitCount = 0;
+                        }
+                        break;
                 }            
             }
         }
